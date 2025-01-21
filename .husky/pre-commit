@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run prettier:fix       # Format files
+npm run eslint:fix           # Lint and fix issues
+npx lint-staged            # Process only staged files
