@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-import { on } from 'events';
 
 /**
  * Read environment variables from file.
@@ -27,12 +26,12 @@ export default defineConfig({
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: 'https://guest:welcome2qauto@qauto.forstudy.space/',
-		// https://qauto.forstudy.space/
-		// httpCredentials: {
-		// 	username: 'quest',
-		// 	password: 'welcome2qauato'
-		// },
+		/*'https://guest:welcome2qauto@qauto.forstudy.space/' */
+		baseURL: 'https://qauto.forstudy.space/',
+		httpCredentials: {
+			username: 'guest',
+			password: 'welcome2qauto',
+		},
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'retain-on-failure',
