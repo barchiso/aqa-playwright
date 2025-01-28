@@ -12,7 +12,7 @@ test.describe('Sign Up Form.', () => {
 
 	const fieldLocators = {
 		name: '//input[@id="signupName"]',
-		last_name: '//input[@id="signupLastName"]',
+		lastName: '//input[@id="signupLastName"]',
 		email: '//input[@id="signupEmail"]',
 		password: '//input[@id="signupPassword"]',
 		confirm: '//input[@id="signupRepeatPassword"]',
@@ -33,30 +33,47 @@ test.describe('Sign Up Form.', () => {
 	const successMessage = '//p[text()="Registration complete"]';
 	const signUpButton = '//button[text()="Sign up"]';
 
-	// Function to check the red border
+	/// Function to check the red border
 	const checkRedBorder = async (page: Page, fieldSelector: string) => {
-		const element = await page.locator(fieldSelector);
-		const borderColor = await element.evaluate(
-			(el) => getComputedStyle(el).borderColor,
+		await page.waitForTimeout(1000); // Delay for CSS effect to apply
+		await expect(page.locator(fieldSelector)).toHaveCSS(
+			'border-color',
+			'rgb(220, 53, 69)',
 		);
-		await expect(borderColor).toContain('rgb(220, 53, 69)');
+	};
+
+	// General function for validating fields
+	const validateField = async (
+		page: Page,
+		fieldSelector: string,
+		errorLocator: string,
+		errorMessage: string,
+	) => {
+		await page.locator(fieldSelector).focus();
+		await page.locator(fieldSelector).blur();
+		await expect(page.locator(errorLocator)).toBeVisible();
+		await expect(page.locator(errorLocator)).toHaveText(errorMessage);
+		await checkRedBorder(page, fieldSelector);
 	};
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 		const signUpButtonLocator = page.locator(signUpButton);
-		await signUpButtonLocator.waitFor({ state: 'visible' });
+		await signUpButtonLocator.waitFor({
+			state: 'visible',
+			timeout: 60000,
+		});
 		await signUpButtonLocator.click();
 	});
 
 	test('Validate "Name" field.', async ({ page }) => {
-		await page.locator(fieldLocators.name).focus();
-		await page.locator(fieldLocators.name).blur();
-		await expect(page.locator(errorLocators.requiredName)).toBeVisible();
-		await expect(page.locator(errorLocators.requiredName)).toHaveText(
+		// Validate empty field
+		await validateField(
+			page,
+			fieldLocators.name,
+			errorLocators.requiredName,
 			'Name required',
 		);
-		await checkRedBorder(page, fieldLocators.name);
 
 		// Invalid length validation
 		await page.locator(fieldLocators.name).fill('A');
@@ -89,54 +106,52 @@ test.describe('Sign Up Form.', () => {
 	});
 
 	test('Validate "Last Name" field.', async ({ page }) => {
-		await page.locator(fieldLocators.last_name).focus();
-		await page.locator(fieldLocators.last_name).blur();
-		await expect(
-			page.locator(errorLocators.requiredLastName),
-		).toBeVisible();
-		await expect(page.locator(errorLocators.requiredLastName)).toHaveText(
+		// Validate empty field
+		await validateField(
+			page,
+			fieldLocators.lastName,
+			errorLocators.requiredLastName,
 			'Last name required',
 		);
-		await checkRedBorder(page, fieldLocators.last_name);
 
 		// Invalid length validation
-		await page.locator(fieldLocators.last_name).fill('A');
-		await page.locator(fieldLocators.last_name).blur();
+		await page.locator(fieldLocators.lastName).fill('A');
+		await page.locator(fieldLocators.lastName).blur();
 		await expect(
 			page.locator(
 				'//p[text()="Last name has to be from 2 to 20 characters long"]',
 			),
 		).toBeVisible();
-		await checkRedBorder(page, fieldLocators.last_name);
+		await checkRedBorder(page, fieldLocators.lastName);
 
 		await page
-			.locator(fieldLocators.last_name)
+			.locator(fieldLocators.lastName)
 			.fill('BravoBravoBravoBravoBravo');
-		await page.locator(fieldLocators.last_name).blur();
+		await page.locator(fieldLocators.lastName).blur();
 		await expect(
 			page.locator(
 				'//p[text()="Last name has to be from 2 to 20 characters long"]',
 			),
 		).toBeVisible();
-		await checkRedBorder(page, fieldLocators.last_name);
+		await checkRedBorder(page, fieldLocators.lastName);
 
 		// Invalid characters validation
-		await page.locator(fieldLocators.last_name).fill('Bravo@');
-		await page.locator(fieldLocators.last_name).blur();
+		await page.locator(fieldLocators.lastName).fill('Bravo@');
+		await page.locator(fieldLocators.lastName).blur();
 		await expect(
 			page.locator('//p[text()="Last name is invalid"]'),
 		).toBeVisible();
-		await checkRedBorder(page, fieldLocators.last_name);
+		await checkRedBorder(page, fieldLocators.lastName);
 	});
 
 	test('Validate "Email" field.', async ({ page }) => {
-		await page.locator(fieldLocators.email).focus();
-		await page.locator(fieldLocators.email).blur();
-		await expect(page.locator(errorLocators.requiredEmail)).toBeVisible();
-		await expect(page.locator(errorLocators.requiredEmail)).toHaveText(
+		// Validate empty field
+		await validateField(
+			page,
+			fieldLocators.email,
+			errorLocators.requiredEmail,
 			'Email required',
 		);
-		await checkRedBorder(page, fieldLocators.email);
 
 		// Invalid characters validation
 		await page.locator(fieldLocators.email).fill('johnny.bravo@');
@@ -146,15 +161,13 @@ test.describe('Sign Up Form.', () => {
 	});
 
 	test('Validate "Password" field.', async ({ page }) => {
-		await page.locator(fieldLocators.password).focus();
-		await page.locator(fieldLocators.password).blur();
-		await expect(
-			page.locator(errorLocators.requiredPassword),
-		).toBeVisible();
-		await expect(page.locator(errorLocators.requiredPassword)).toHaveText(
+		// Validate empty field
+		await validateField(
+			page,
+			fieldLocators.password,
+			errorLocators.requiredPassword,
 			'Password required',
 		);
-		await checkRedBorder(page, fieldLocators.password);
 
 		// Invalid password length validation
 		await page.locator(fieldLocators.password).fill('short');
@@ -178,16 +191,15 @@ test.describe('Sign Up Form.', () => {
 	});
 
 	test('Validate "Re-enter Password" field.', async ({ page }) => {
-		await page.locator(fieldLocators.confirm).focus();
-		await page.locator(fieldLocators.confirm).blur();
-		await expect(
-			page.locator(errorLocators.requiredConfirmPassword),
-		).toBeVisible();
-		await expect(
-			page.locator(errorLocators.requiredConfirmPassword),
-		).toHaveText('Re-enter password required');
-		await checkRedBorder(page, fieldLocators.confirm);
+		// Validate empty field
+		await validateField(
+			page,
+			fieldLocators.confirm,
+			errorLocators.requiredConfirmPassword,
+			'Re-enter password required',
+		);
 
+		// Password mismatch validation
 		await page.locator(fieldLocators.password).fill(uniquePassword);
 		await page.locator(fieldLocators.confirm).fill('Password1!');
 		await page.locator(fieldLocators.confirm).blur();
@@ -199,11 +211,13 @@ test.describe('Sign Up Form.', () => {
 
 	test('Verify user successful registration.', async ({ page }) => {
 		await page.locator(fieldLocators.name).fill('John');
-		await page.locator(fieldLocators.last_name).fill('Doe');
+		await page.locator(fieldLocators.lastName).fill('Doe');
 		await page.locator(fieldLocators.email).fill(uniqueEmail);
 		await page.locator(fieldLocators.password).fill(uniquePassword);
 		await page.locator(fieldLocators.confirm).fill(uniquePassword);
 		await page.locator(registerButton).click();
+
+		// Verify success message
 		await expect(page.locator(successMessage)).toBeVisible();
 	});
 });
