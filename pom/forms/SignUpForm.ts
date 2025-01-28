@@ -108,63 +108,24 @@ export default class SignUpForm {
 		await this.submitRegistration();
 	}
 
-	async nameErrorMessage(): Promise<string | null> {
-		if (await this.requiredName.isVisible()) {
-			return 'Name required';
-		}
-		if (await this.invalidName.isVisible()) {
-			return 'Name is invalid';
-		}
-		if (await this.lengthName.isVisible()) {
-			return 'Name has to be from 2 to 20 characters long';
-		}
-		return null; // No error message visible
+	async validateField(
+		fieldSelector: Locator,
+		errorLocator: Locator,
+		errorMessage: string,
+	) {
+		await fieldSelector.focus();
+		await fieldSelector.blur();
+		await expect(errorLocator).toBeVisible();
+		await expect(errorLocator).toHaveText(errorMessage);
+		await this.checkRedBorder(fieldSelector);
 	}
 
-	async lastNameErrorMessage(): Promise<string | null> {
-		if (await this.requiredLastName.isVisible()) {
-			return 'Last name required';
-		}
-		if (await this.invalidLastName.isVisible()) {
-			return 'Last name is invalid';
-		}
-		if (await this.lengthLastName.isVisible()) {
-			return 'Last name has to be from 2 to 20 characters long';
-		}
-		return null; // No error message visible
-	}
-
-	async emailErrorMessage(): Promise<string | null> {
-		if (await this.requiredEmail.isVisible()) {
-			return 'Email required';
-		}
-		if (await this.invalidEmail.isVisible()) {
-			return 'Email is incorrect';
-		}
-		return null; // No error message visible
-	}
-
-	async passwordErrorMessage(): Promise<string | null> {
-		if (await this.requiredPassword.isVisible()) {
-			return 'Password required';
-		}
-		if (await this.invalidPassword.isVisible()) {
-			return (
-				'Password has to be from 8 to 15 characters long ' +
-				'and contain at least one integer, one capital, ' +
-				'and one small letter'
-			);
-		}
-		return null; // No error message visible
-	}
-
-	async confirmErrorMessage(): Promise<string | null> {
-		if (await this.requiredConfirmPassword.isVisible()) {
-			return 'Re-enter password required';
-		}
-		if (await this.notMatchPasswords.isVisible()) {
-			return 'Passwords do not match';
-		}
-		return null; // No error message visible
+	// Function to check the red border
+	async checkRedBorder(fieldSelector: Locator) {
+		await this.page.waitForTimeout(500); // Delay for CSS effect to apply
+		await expect(fieldSelector).toHaveCSS(
+			'border-color',
+			'rgb(220, 53, 69)',
+		);
 	}
 }

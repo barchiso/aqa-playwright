@@ -40,33 +40,36 @@ test.describe('Sign Up Form', () => {
 
 	test.describe('Validate "Name" field.', async () => {
 		test('Sign up without name', async () => {
-			await signUpForm.nameField.focus();
-			await signUpForm.nameField.blur();
-			const errorMessage = await signUpForm.nameErrorMessage();
-			expect(errorMessage).toBe('Name required');
+			await signUpForm.validateField(
+				signUpForm.nameField,
+				signUpForm.requiredName,
+				'Name required',
+			);
 		});
 
 		test('Sign up with invalid name', async () => {
 			await signUpForm.enterName('Johnny@');
-			await signUpForm.nameField.blur();
-			const invalidError = await signUpForm.nameErrorMessage();
-			expect(invalidError).toBe('Name is invalid');
+			await signUpForm.validateField(
+				signUpForm.nameField,
+				signUpForm.invalidName,
+				'Name is invalid',
+			);
 		});
 
 		test('Sign up with short name', async () => {
 			await signUpForm.enterName('J');
-			await signUpForm.nameField.blur();
-			const lengthError = await signUpForm.nameErrorMessage();
-			expect(lengthError).toBe(
+			await signUpForm.validateField(
+				signUpForm.nameField,
+				signUpForm.lengthName,
 				'Name has to be from 2 to 20 characters long',
 			);
 		});
 
 		test('Sign up with long name', async () => {
 			await signUpForm.enterName('JohnnyJohnnyJohnnyJohnny');
-			await signUpForm.nameField.blur();
-			const lengthError = await signUpForm.nameErrorMessage();
-			expect(lengthError).toBe(
+			await signUpForm.validateField(
+				signUpForm.nameField,
+				signUpForm.lengthName,
 				'Name has to be from 2 to 20 characters long',
 			);
 		});
@@ -74,33 +77,36 @@ test.describe('Sign Up Form', () => {
 
 	test.describe('Validate "Last Name" field.', async () => {
 		test('Sign up without last name', async () => {
-			await signUpForm.lastNameField.focus();
-			await signUpForm.lastNameField.blur();
-			const errorMessage = await signUpForm.lastNameErrorMessage();
-			expect(errorMessage).toBe('Last name required');
+			await signUpForm.validateField(
+				signUpForm.lastNameField,
+				signUpForm.requiredLastName,
+				'Last name required',
+			);
 		});
 
 		test('Sign up with invalid last name', async () => {
 			await signUpForm.enterLastName('Bravo@');
-			await signUpForm.lastNameField.blur();
-			const invalidError = await signUpForm.lastNameErrorMessage();
-			expect(invalidError).toBe('Last name is invalid');
+			await signUpForm.validateField(
+				signUpForm.lastNameField,
+				signUpForm.invalidLastName,
+				'Last name is invalid',
+			);
 		});
 
 		test('Sign up with short last name', async () => {
 			await signUpForm.enterLastName('B');
-			await signUpForm.lastNameField.blur();
-			const lengthError = await signUpForm.lastNameErrorMessage();
-			expect(lengthError).toBe(
+			await signUpForm.validateField(
+				signUpForm.lastNameField,
+				signUpForm.lengthLastName,
 				'Last name has to be from 2 to 20 characters long',
 			);
 		});
 
 		test('Sign up with long last name', async () => {
 			await signUpForm.enterLastName('BravoBravoBravoBravoB');
-			await signUpForm.lastNameField.blur();
-			const lengthError = await signUpForm.lastNameErrorMessage();
-			expect(lengthError).toBe(
+			await signUpForm.validateField(
+				signUpForm.lastNameField,
+				signUpForm.lengthLastName,
 				'Last name has to be from 2 to 20 characters long',
 			);
 		});
@@ -108,54 +114,59 @@ test.describe('Sign Up Form', () => {
 
 	test.describe('Validate "Email" field.', async () => {
 		test('Sign up without email', async () => {
-			await signUpForm.emailField.focus();
-			await signUpForm.emailField.blur();
-			const errorMessage = await signUpForm.emailErrorMessage();
-			expect(errorMessage).toBe('Email required');
+			await signUpForm.validateField(
+				signUpForm.emailField,
+				signUpForm.requiredEmail,
+				'Email required',
+			);
 		});
 
 		test('Sign up with invalid email', async () => {
 			await signUpForm.enterEmail('Bravo@');
-			await signUpForm.emailField.blur();
-			const invalidError = await signUpForm.emailErrorMessage();
-			expect(invalidError).toBe('Email is incorrect');
+			await signUpForm.validateField(
+				signUpForm.emailField,
+				signUpForm.invalidEmail,
+				'Email is incorrect',
+			);
 		});
 	});
 
 	test.describe('Validate "Password" field.', async () => {
 		test('Sign up without password', async () => {
-			await signUpForm.passwordField.focus();
-			await signUpForm.passwordField.blur();
-			const errorMessage = await signUpForm.passwordErrorMessage();
-			expect(errorMessage).toBe('Password required');
+			await signUpForm.validateField(
+				signUpForm.passwordField,
+				signUpForm.requiredPassword,
+				'Password required',
+			);
 		});
 
 		test('Sign up with invalid password', async () => {
 			await signUpForm.enterPassword('password');
-			await signUpForm.passwordField.blur();
-			const invalidError = await signUpForm.passwordErrorMessage();
-			expect(invalidError).toBe(
-				'Password has to be from 8 to 15 characters long ' +
-					'and contain at least one integer, one capital, ' +
-					'and one small letter',
+			await signUpForm.validateField(
+				signUpForm.passwordField,
+				signUpForm.invalidPassword,
+				'Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter',
 			);
 		});
 	});
 
 	test.describe('Validate "Re-enter password" field.', async () => {
 		test('Sign up without re-enter password', async () => {
-			await signUpForm.confirmField.focus();
-			await signUpForm.confirmField.blur();
-			const errorMessage = await signUpForm.confirmErrorMessage();
-			expect(errorMessage).toBe('Re-enter password required');
+			await signUpForm.validateField(
+				signUpForm.confirmField,
+				signUpForm.requiredConfirmPassword,
+				'Re-enter password required',
+			);
 		});
 
 		test('Verify passwords do not match', async () => {
 			await signUpForm.enterPassword(uniquePassword);
 			await signUpForm.enterConfirmPassword('Password2');
-			await signUpForm.confirmField.blur();
-			const invalidError = await signUpForm.confirmErrorMessage();
-			expect(invalidError).toBe('Passwords do not match');
+			await signUpForm.validateField(
+				signUpForm.confirmField,
+				signUpForm.notMatchPasswords,
+				'Passwords do not match',
+			);
 		});
 	});
 });
