@@ -1,7 +1,7 @@
 //  Homework #43. POM in Playwright.
 //  Rewrite existing user registration tests using Page Objects.
 
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { credentials } from '../test-data/usersData';
 import HomePage from '../pom/pages/HomePage';
 import GaragePage from '../pom/pages/GaragePage';
