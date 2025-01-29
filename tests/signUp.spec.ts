@@ -1,4 +1,3 @@
-
 //  Homework #43. POM in Playwright.
 //  Rewrite existing user registration tests using Page Objects.
 
@@ -169,3 +168,5 @@ test.describe('Sign Up Form', () => {
 				'Passwords do not match',
 			);
 		});
+	});
+});
