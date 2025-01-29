@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+dotenv.config();
 
 /**
  * Read environment variables from file.
@@ -6,7 +8,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 // import dotenv from 'dotenv';
 // import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+// dotenv.config({ path: path.resolve('.env') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -27,12 +29,16 @@ export default defineConfig({
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
 
-		/*'https://guest:welcome2qauto@qauto.forstudy.space/' */
-		baseURL: 'https://qauto.forstudy.space/',
+		// Use variables from .env
+		baseURL: process.env.BASE_URL,
 
 		httpCredentials: {
-			username: 'guest',
-			password: 'welcome2qauto',
+			username: process.env.AUTH_USERNAME
+				? process.env.AUTH_USERNAME
+				: '',
+			password: process.env.AUTH_PASSWORD
+				? process.env.AUTH_PASSWORD
+				: '',
 		},
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -49,14 +55,14 @@ export default defineConfig({
 		},
 
 		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
-		},
-
-		{
 			name: 'webkit',
 			use: { ...devices['Desktop Safari'] },
 		},
+
+		// {
+		// 	name: 'firefox',
+		// 	use: { ...devices['Desktop Firefox'] },
+		// },
 
 		/* Test against mobile viewports. */
 		// {

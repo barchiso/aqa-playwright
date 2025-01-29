@@ -1,5 +1,10 @@
-//  Homework #43. POM in Playwright.
-//  Rewrite existing user registration tests using Page Objects.
+// Homework #24. POM in Playwright.
+// Rewrite existing user registration tests using Page Objects.
+
+// Homework #25. Playwright CLI and ENV variables
+// Take baseUrl and httpCredentials in .env file
+// Use environment variables in playwright config or create your own config
+// where you will store these values and use the values from your config
 
 import { test } from '@playwright/test';
 import { credentials } from '../test-data/usersData';
