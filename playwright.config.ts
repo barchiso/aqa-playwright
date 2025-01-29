@@ -26,8 +26,10 @@ export default defineConfig({
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
+
+		/*'https://guest:welcome2qauto@qauto.forstudy.space/' */
 		baseURL: 'https://qauto.forstudy.space/',
-		// https://guest:welcome2qauto@qauto.forstudy.space/
+
 		httpCredentials: {
 			username: 'guest',
 			password: 'welcome2qauto',
