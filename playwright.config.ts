@@ -49,15 +49,69 @@ export default defineConfig({
 
 	/* Configure projects for major browsers */
 	projects: [
+		// Signup on Chromium & WebKit remain unchanged
 		{
-			name: 'chromium',
+			name: 'signup-chromium',
 			use: { ...devices['Desktop Chrome'] },
+			testMatch: '*/signUp.spec.ts',
+		},
+		{
+			name: 'signup-webkit',
+			use: { ...devices['Desktop Safari'] },
+			testMatch: '*/signUp.spec.ts',
 		},
 
+		// Updated Setup projects to catch all spec files inside the setup folder
 		{
-			name: 'webkit',
-			use: { ...devices['Desktop Safari'] },
+			name: 'setup-chromium',
+			use: { ...devices['Desktop Chrome'] },
+			testMatch: '*setup/*.ts',
 		},
+		{
+			name: 'setup-webkit',
+			use: { ...devices['Desktop Safari'] },
+			testMatch: '*setup/*.ts',
+		},
+
+		// E2E (Garage) tests remain as before
+		{
+			name: 'e2e-chromium',
+			use: { ...devices['Desktop Chrome'] },
+			testMatch: '*e2e/*.ts',
+			dependencies: ['setup-chromium'],
+		},
+		{
+			name: 'e2e-webkit',
+			use: { ...devices['Desktop Safari'] },
+			testMatch: '*e2e/*.ts',
+			dependencies: ['setup-webkit'],
+		},
+		// {
+		// 	name: 'signup',
+		// 	use: { ...devices['Desktop Chrome'] },
+		// 	testMatch: 'tests/signUp.spec.ts', // Runs first
+		// },
+		// {
+		// 	name: 'setup',
+		// 	use: { ...devices['Desktop Chrome'] },
+		// 	testMatch: 'setup/*.ts',
+		// },
+
+		// {
+		// 	name: 'e2e',
+		// 	use: { ...devices['Desktop Chrome'] },
+		// 	dependencies: ['setup'],
+		// },
+
+		// {
+		// 	name: 'chromium',
+		// 	use: { ...devices['Desktop Chrome'] },
+		// },
+
+		// {
+		// 	name: 'webkit',
+		// 	use: { ...devices['Desktop Safari'] },
+		// },
 
 		// {
 		// 	name: 'firefox',
