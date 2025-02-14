@@ -65,3 +65,9 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+
+# Allure 
+allure-reports/
+allure-results/
+
+test-data/states/
