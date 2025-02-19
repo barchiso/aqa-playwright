@@ -1,0 +1,76 @@
+name: Playwright Tests
+on:
+    workflow_dispatch:
+        inputs:
+            test_parameters:
+                description: 'Write any test parameters'
+                required: false
+                default: ' '
+jobs:
+    playwright-tests:
+        env:
+            BASE_URL: ${{ secrets.BASE_URL }}
+            USER_NAME: ${{ secrets.AUTH_USERNAME }}
+            PASSWORD: ${{ secrets.AUTH_PASSWORD }}
+        timeout-minutes: 60
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+            - name: Install dependencies
+              run: npm ci
+            - name: Install Playwright Browsers
+              run: npx playwright install chromium --with-deps
+            - name: Run Playwright tests with Allure Reporter
+              run: npx playwright test ${{ inputs.test_parameters }} --reporter=allure-playwright
+            - name: Generate Allure report
+              run: |
+                  allure generate allure-results --clean -o allure-reports
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: allure-report
+                  path: allure-reports/
+                  retention-days: 30
+            - uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: playwright-report
+                  path: playwright-report/
+                  retention-days: 30
+
+        deploy:
+            if: ${{ always() }}
+            runs-on: ubuntu-latest
+            needs: playwright-tests
+            permissions:
+                pages: write
+                id-token: write
+            steps:
+                - name: Checkout repository
+                  uses: actions/checkout@v4
+                - name: Download Allure report artifact
+                  uses: actions/download-artifact@v4
+                  with:
+                      name: allure-report
+                      path: docs/allure-reports
+                - name: Download Playwright report artifact
+                  uses: actions/download-artifact@v4
+                  with:
+                      name: playwright-report
+                      path: docs/playwright-report
+                - name: Setup Pages
+                  uses: actions/configure-pages@v5
+                - name: Upload Allure and Playwright report to Pages
+                  uses: actions/upload-pages-artifact@v3
+                  with:
+                      path: docs
+                - name: Deploy to GitHub Pages
+                  id: deployment
+                  uses: actions/deploy-pages@v4
