@@ -32,6 +32,9 @@ jobs:
             - name: Install Playwright Browsers
               run: npx playwright install chromium webkit --with-deps
 
+            - name: Install Allure CLI
+              run: npm install -g allure-commandline --save-dev
+
             - name: Install OpenJDK 11
               run: |
                 apt-get update
