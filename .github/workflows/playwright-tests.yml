@@ -41,6 +41,12 @@ jobs:
                 
             - name: Run Playwright tests with Allure Reporter
               run: npx playwright test ${{ inputs.test_parameters }} --reporter=allure-playwright
+
+            - name: Generate Allure report
+              if: ${{ always() }}
+              run: |
+                  mkdir -p allure-report  
+                  allure generate allure-results --clean -o allure-reports
                   
             - name: Upload Allure report artifact
               if: ${{ always() }}
