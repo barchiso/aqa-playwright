@@ -80,14 +80,6 @@ jobs:
                   name: allure-report
                   path: docs/allure-reports
 
-              # Download Playwright report artifact if available
-            - name: Download Playwright report artifact
-              if: !contains(inputs.test_parameters, 'allure-playwright')
-              uses: actions/download-artifact@v4
-              with:
-                  name: playwright-report
-                  path: docs/playwright-report
-
               # Setup Pages to deploy
             - name: Setup Pages
               uses: actions/configure-pages@v5
