@@ -1,7 +1,13 @@
 name: Playwright Tests in Docker
 
-on: workflow_dispatch
-
+on: 
+  workflow_dispatch:
+    inputs:
+      test_parameters:
+        description: 'Write any test parameters'
+        required: false
+        default: ' '
+        
 jobs:
     playwright-tests:
         env:
@@ -34,14 +40,10 @@ jobs:
                 echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
                 
             - name: Run Playwright tests with Allure Reporter
-              run: npx playwright test --reporter=allure-playwright
-              
-            - name: Generate Allure report
-              run: |
-                  mkdir -p allure-report  
-                  allure generate allure-results --clean -o allure-reports
+              run: npx playwright test ${{ inputs.test_parameters }} --reporter=allure-playwright
                   
             - name: Upload Allure report artifact
+              if: ${{ always() }}
               uses: actions/upload-artifact@v4
               with:
                   name: allure-report
