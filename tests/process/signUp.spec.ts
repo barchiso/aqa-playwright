@@ -7,10 +7,10 @@
 // where you will store these values and use the values from your config
 
 import { test } from '@playwright/test';
-import { credentials } from '../test-data/usersData';
-import HomePage from '../pom/pages/HomePage';
-import GaragePage from '../pom/pages/GaragePage';
-import SignUpForm from '../pom/forms/SignUpForm';
+import { credentials } from '../../test-data/usersData';
+import HomePage from '../../pom/pages/HomePage';
+import GaragePage from '../../pom/pages/GaragePage';
+import SignUpForm from '../../pom/forms/SignUpForm';
 
 test.describe('Sign Up Form', () => {
 	const uniqueEmail = credentials.userOne.email;

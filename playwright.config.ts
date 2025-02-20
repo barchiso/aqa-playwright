@@ -82,21 +82,16 @@ export default defineConfig({
 			use: { ...devices['Desktop Chrome'] },
 			testMatch: '*api/*.ts',
 		},
-		// SignUp tests remain as before
+		// Process tests remain as before
 		{
-			name: 'signup-chromium',
+			name: 'process-chromium',
 			use: { ...devices['Desktop Chrome'] },
-			testMatch: 'signUp.spec.ts',
+			testMatch: '*process/*.ts',
 		},
 		{
-			name: 'signup-webkit',
+			name: 'process-webkit',
 			use: { ...devices['Desktop Safari'] },
-			testMatch: 'signUp.spec.ts',
-		},
-
-		{
-			name: 'Desktop Chrome',
-			use: { ...devices['Desktop Chrome'] },
+			testMatch: '*process/*.ts',
 		},
 
 		// {
