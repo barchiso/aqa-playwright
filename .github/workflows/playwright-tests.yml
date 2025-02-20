@@ -2,18 +2,22 @@ name: Playwright Tests in Docker
 
 on: 
   workflow_dispatch:
-    inputs:
-      test_parameters:
-        description: 'Write any test parameters'
-        required: false
-        default: ' '
-        
+        inputs:
+            test_parameters:
+                description: 'Write any test parameters'
+                required: false
+                default: ''
+                
 jobs:
     playwright-tests:
         timeout-minutes: 60
         runs-on: ubuntu-latest
         container:
             image: mcr.microsoft.com/playwright:v1.50.1-noble
+            env:
+                BASE_URL: ${{ secrets.BASE_URL }}
+                AUTH_USERNAME: ${{ secrets.AUTH_USERNAME }}
+                AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
 
         steps:
             - uses: actions/checkout@v4
