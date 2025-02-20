@@ -22,37 +22,29 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-              # Set up Node.js
             - uses: actions/setup-node@v4
               with:
                   node-version: 18
 
-              # Install dependencies
             - name: Install dependencies
               run: npm install
 
-              # Install Playwright Browsers
             - name: Install Playwright Browsers
               run: npx playwright install chromium --with-deps
 
-              # Run Playwright tests based on user input
+            - name: Install Allure CLI
+              run: npm install -g allure-commandline --save-dev
+
             - name: Run Playwright tests with Allure Reporter
               run: |
                   npx playwright test ${{ inputs.test_parameters }}
 
-              # Install Allure CLI if 'allure-playwright' reporter is used
-            - name: Install Allure CLI
-              if: contains(inputs.test_parameters, 'allure-playwright')
-              run: npm install -g allure-commandline --save-dev
-
-              # Generate Allure report if 'allure-playwright' reporter is used
             - name: Generate Allure report
               if: contains(inputs.test_parameters, 'allure-playwright')
               run: |
                   mkdir -p allure-report  
                   allure generate allure-results --clean -o allure-reports
 
-              # Upload Allure report artifact if generated
             - name: Upload Allure report artifact
               if: contains(inputs.test_parameters, 'allure-playwright')
               uses: actions/upload-artifact@v4
@@ -72,7 +64,6 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-              # Download Allure report artifact if available
             - name: Download Allure report artifact
               if: contains(inputs.test_parameters, 'allure-playwright')
               uses: actions/download-artifact@v4
@@ -80,17 +71,14 @@ jobs:
                   name: allure-report
                   path: docs/allure-reports
 
-              # Setup Pages to deploy
             - name: Setup Pages
               uses: actions/configure-pages@v5
 
-              # Upload report to GitHub Pages
             - name: Upload report to Pages
               uses: actions/upload-pages-artifact@v3
               with:
                   path: docs
 
-              # Deploy to GitHub Pages
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
