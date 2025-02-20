@@ -1,12 +1,6 @@
 name: Playwright Tests in Docker
 
-on:
-    workflow_dispatch:
-        inputs:
-            test_parameters:
-                description: 'Write any test parameters'
-                required: false
-                default: '--reporter=allure-playwright'
+on: workflow_dispatch
 
 jobs:
     playwright-tests:
@@ -32,25 +26,22 @@ jobs:
             - name: Install Playwright Browsers
               run: npx playwright install chromium --with-deps
 
-            - name: Install Allure CLI
-              run: npm install -g allure-commandline --save-dev
-
             - name: Install OpenJDK 11
               run: |
                 apt-get update
                 apt-get install -y openjdk-11-jdk
                 echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))" >> $GITHUB_ENV
                 echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+                
             - name: Run Playwright tests with Allure Reporter
-              run: |
-                  npx playwright test ${{ inputs.test_parameters }}
+              run: npx playwright test --reporter=allure-playwright
+              
             - name: Generate Allure report
-              if: contains(inputs.test_parameters, '--reporter=allure-playwright')
               run: |
                   mkdir -p allure-report  
                   allure generate allure-results --clean -o allure-reports
+                  
             - name: Upload Allure report artifact
-              if: contains(inputs.test_parameters, '--reporter=allure-playwright')
               uses: actions/upload-artifact@v4
               with:
                   name: allure-report
@@ -69,7 +60,6 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Download Allure report artifact
-              if: contains(inputs.test_parameters, '--reporter=allure-playwright')
               uses: actions/download-artifact@v4
               with:
                   name: allure-report
