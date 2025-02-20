@@ -12,8 +12,8 @@ jobs:
     playwright-tests:
         env:
             BASE_URL: ${{ secrets.BASE_URL }}
-            USER_NAME: ${{ secrets.AUTH_USERNAME }}
-            PASSWORD: ${{ secrets.AUTH_PASSWORD }}
+            USER_NAME: ${{ secrets.USER_NAME }}
+            PASSWORD: ${{ secrets.PASSWORD }}
         timeout-minutes: 60
         runs-on: ubuntu-latest
         container:
