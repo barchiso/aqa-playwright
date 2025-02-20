@@ -1,4 +1,5 @@
-name: Playwright Tests
+name: Playwright Tests in Docker
+
 on:
     workflow_dispatch:
         inputs:
