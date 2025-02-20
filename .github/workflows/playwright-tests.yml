@@ -35,6 +35,13 @@ jobs:
             - name: Install Allure CLI
               run: npm install -g allure-commandline --save-dev
 
+            - name: Install OpenJDK 11
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y openjdk-11-jdk
+                echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))" >> $GITHUB_ENV
+                echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+
             - name: Run Playwright tests with Allure Reporter
               run: |
                   npx playwright test ${{ inputs.test_parameters }}
